@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "999262285073",
+    "project_id": "eventosya-e71d8",
+    "storage_bucket": "eventosya-e71d8.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:999262285073:android:57ce5d7fb3e1ad4394f0b0",
+        "android_client_info": {
+          "package_name": "com.mishell.eventosYA"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBcIZUU804BJqYlfaLIlE_5igrX4boZ3gU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
