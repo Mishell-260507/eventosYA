@@ -12,7 +12,12 @@
           "package_name": "com.mishell.eventosYA"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "999262285073-m0k9e6m4p9cu2ih6040f8vahtuklu7qe.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyBcIZUU804BJqYlfaLIlE_5igrX4boZ3gU"
@@ -20,7 +25,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "999262285073-m0k9e6m4p9cu2ih6040f8vahtuklu7qe.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }
