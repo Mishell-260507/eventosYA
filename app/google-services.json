@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "999262285073-nptrphoehrb19u17dtbb0muos5dklb7c.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mishell.eventosYA",
+            "certificate_hash": "2237b8c5301647137d03b880dbcd8123ea25b7b0"
+          }
+        },
+        {
           "client_id": "999262285073-m0k9e6m4p9cu2ih6040f8vahtuklu7qe.apps.googleusercontent.com",
           "client_type": 3
         }
