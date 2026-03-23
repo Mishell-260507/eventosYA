@@ -1,6 +1,8 @@
 package com.mishell.eventosya.ui.screens.admin
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Logout
 import androidx.compose.material.icons.filled.Palette
@@ -28,7 +30,8 @@ fun AdminProfileScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
-                .padding(16.dp),
+                .padding(16.dp)
+                .verticalScroll(rememberScrollState()), // Añadido scroll para asegurar que se vea todo
             verticalArrangement = Arrangement.spacedBy(24.dp)
         ) {
             // Sección de Usuario
@@ -42,11 +45,6 @@ fun AdminProfileScreen(
                         text = state.user?.email ?: "",
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    SuggestionChip(
-                        onClick = { },
-                        label = { Text("Rol: ${state.user?.role?.uppercase() ?: "ADMIN"}") }
                     )
                 }
             }
@@ -62,7 +60,6 @@ fun AdminProfileScreen(
                 Column(modifier = Modifier.padding(8.dp)) {
                     ListItem(
                         headlineContent = { Text("Color Dinámico") },
-                        supportingContent = { Text("Usa colores de tu fondo de pantalla (Android 12+)") },
                         leadingContent = { Icon(Icons.Default.Palette, contentDescription = null) },
                         trailingContent = {
                             Switch(
@@ -71,38 +68,29 @@ fun AdminProfileScreen(
                             )
                         }
                     )
-                    ListItem(
-                        headlineContent = { Text("Alto Contraste") },
-                        supportingContent = { Text("Aumenta la legibilidad de los textos") },
-                        leadingContent = { Icon(Icons.Default.Settings, contentDescription = null) },
-                        trailingContent = {
-                            Switch(
-                                checked = state.isHighContrastEnabled,
-                                onCheckedChange = viewModel::toggleHighContrast
-                            )
-                        }
-                    )
                 }
             }
 
-            Spacer(modifier = Modifier.weight(1f))
+            Spacer(modifier = Modifier.height(32.dp))
 
-            // Botón de Cerrar Sesión
+            // Botón de Cerrar Sesión (Ahora más visible)
             Button(
                 onClick = {
                     viewModel.logout()
                     onLogout()
                 },
-                modifier = Modifier.fillMaxWidth().height(50.dp),
+                modifier = Modifier.fillMaxWidth().height(56.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.errorContainer,
-                    contentColor = MaterialTheme.colorScheme.onErrorContainer
+                    containerColor = MaterialTheme.colorScheme.error,
+                    contentColor = MaterialTheme.colorScheme.onError
                 )
             ) {
                 Icon(Icons.Default.Logout, contentDescription = null)
                 Spacer(modifier = Modifier.width(8.dp))
-                Text("Cerrar Sesión")
+                Text("CERRAR SESIÓN")
             }
+            
+            Spacer(modifier = Modifier.height(16.dp))
         }
     }
 }

@@ -1,15 +1,17 @@
 package com.mishell.eventosya.data.model
 
 import com.google.firebase.Timestamp
+import com.google.firebase.firestore.IgnoreExtraProperties
 
+@IgnoreExtraProperties
 data class Event(
-    val id: String = "",
-    val title: String = "",
-    val description: String = "",
-    val date: Timestamp? = null,
-    val location: String = "",
-    val imageUrl: String? = null,
-    val capacity: Int = 0,
-    val registeredUsers: List<String> = emptyList(),
-    val category: String = "General"
+    var id: String = "",
+    var title: String = "",
+    var description: String = "",
+    var date: Timestamp? = null,
+    var location: String = "",
+    var imageUrl: String? = null,
+    var capacity: Long = 0, // Cambiado a Long para compatibilidad total con Firestore
+    var registeredUsers: List<String> = emptyList(),
+    var category: String = "General"
 )

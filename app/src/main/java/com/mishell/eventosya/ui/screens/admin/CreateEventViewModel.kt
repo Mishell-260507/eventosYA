@@ -6,8 +6,8 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.Timestamp
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.mishell.eventosya.data.model.Event
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import java.util.Date
@@ -29,6 +29,7 @@ class CreateEventViewModel : ViewModel() {
         private set
 
     private val firestore = FirebaseFirestore.getInstance()
+    private val auth = FirebaseAuth.getInstance()
 
     fun onTitleChange(value: String) { uiState = uiState.copy(title = value) }
     fun onDescriptionChange(value: String) { uiState = uiState.copy(description = value) }
@@ -37,10 +38,16 @@ class CreateEventViewModel : ViewModel() {
     fun onCategoryChange(value: String) { uiState = uiState.copy(category = value) }
 
     fun saveEvent() {
+        val currentUser = auth.currentUser
+        if (currentUser == null) {
+            uiState = uiState.copy(errorMessage = "Error: Usuario no autenticado")
+            return
+        }
+
         val title = uiState.title.trim()
         val description = uiState.description.trim()
         val location = uiState.location.trim()
-        val capacity = uiState.capacity.toIntOrNull() ?: 0
+        val capacity = uiState.capacity.toLongOrNull() ?: 0L
 
         if (title.isBlank() || location.isBlank()) {
             uiState = uiState.copy(errorMessage = "Título y Ubicación son obligatorios")
@@ -51,22 +58,29 @@ class CreateEventViewModel : ViewModel() {
             uiState = uiState.copy(isLoading = true, errorMessage = null)
             try {
                 val eventId = UUID.randomUUID().toString()
-                val event = Event(
-                    id = eventId,
-                    title = title,
-                    description = description,
-                    location = location,
-                    capacity = capacity,
-                    category = uiState.category,
-                    date = Timestamp(Date()) // Fecha actual por defecto
+                
+                val eventData = hashMapOf(
+                    "id" to eventId,
+                    "title" to title,
+                    "description" to description,
+                    "location" to location,
+                    "capacity" to capacity,
+                    "category" to uiState.category,
+                    "date" to Timestamp(Date()),
+                    "createdBy" to currentUser.uid,
+                    "registeredUsers" to emptyList<String>()
                 )
 
-                firestore.collection("events").document(eventId).set(event).await()
+                firestore.collection("events")
+                    .document(eventId)
+                    .set(eventData)
+                    .await()
+                
                 uiState = uiState.copy(isLoading = false, isSuccess = true)
             } catch (e: Exception) {
                 uiState = uiState.copy(
                     isLoading = false,
-                    errorMessage = e.localizedMessage ?: "Error al guardar el evento"
+                    errorMessage = "Error al guardar: ${e.localizedMessage}"
                 )
             }
         }

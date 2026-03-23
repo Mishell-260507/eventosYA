@@ -6,6 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ListenerRegistration
 import com.mishell.eventosya.data.model.Event
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
@@ -21,35 +22,45 @@ class AdminHomeViewModel : ViewModel() {
         private set
 
     private val firestore = FirebaseFirestore.getInstance()
+    private var eventsListener: ListenerRegistration? = null
 
     init {
-        loadEvents()
+        observeEvents()
     }
 
-    fun loadEvents() {
-        viewModelScope.launch {
-            uiState = uiState.copy(isLoading = true, errorMessage = null)
-            try {
-                val snapshot = firestore.collection("events").get().await()
-                val events = snapshot.toObjects(Event::class.java)
-                uiState = uiState.copy(events = events, isLoading = false)
-            } catch (e: Exception) {
-                uiState = uiState.copy(
-                    isLoading = false,
-                    errorMessage = e.localizedMessage ?: "Error al cargar eventos"
-                )
+    private fun observeEvents() {
+        uiState = uiState.copy(isLoading = true)
+        
+        // Listener en tiempo real: detecta cambios automáticamente
+        eventsListener = firestore.collection("events")
+            .addSnapshotListener { snapshot, error ->
+                if (error != null) {
+                    uiState = uiState.copy(
+                        isLoading = false,
+                        errorMessage = error.localizedMessage ?: "Error al observar eventos"
+                    )
+                    return@addSnapshotListener
+                }
+
+                if (snapshot != null) {
+                    val eventsList = snapshot.toObjects(Event::class.java)
+                    uiState = uiState.copy(events = eventsList, isLoading = false)
+                }
             }
-        }
     }
 
     fun deleteEvent(eventId: String) {
         viewModelScope.launch {
             try {
                 firestore.collection("events").document(eventId).delete().await()
-                loadEvents() // Recargar lista
             } catch (e: Exception) {
                 uiState = uiState.copy(errorMessage = "Error al eliminar: ${e.localizedMessage}")
             }
         }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        eventsListener?.remove() // Limpiar listener para evitar fugas de memoria
     }
 }

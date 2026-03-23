@@ -26,7 +26,9 @@ sealed class AdminScreen(val route: String, val title: String, val icon: ImageVe
 }
 
 @Composable
-fun AdminNavigation() {
+fun AdminNavigation(
+    onLogout: () -> Unit = {}
+) {
     var currentScreen by remember { mutableStateOf<AdminScreen>(AdminScreen.Home) }
     val items = listOf(AdminScreen.Home, AdminScreen.Tickets, AdminScreen.Profile)
     val context = LocalContext.current
@@ -99,7 +101,7 @@ fun AdminNavigation() {
                             )
                             AdminProfileScreen(
                                 viewModel = profileViewModel,
-                                onLogout = { /* Navegar al login */ }
+                                onLogout = onLogout
                             )
                         }
                     }

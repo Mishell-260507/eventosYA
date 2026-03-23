@@ -6,12 +6,14 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Logout
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import com.google.firebase.auth.FirebaseAuth
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -32,6 +34,16 @@ fun CreateEventScreen(
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Icon(Icons.Default.ArrowBack, contentDescription = "Volver")
+                    }
+                },
+                actions = {
+                    // Botón de cerrar sesión directo desde aquí
+                    IconButton(onClick = { FirebaseAuth.getInstance().signOut() }) {
+                        Icon(
+                            imageVector = Icons.Default.Logout,
+                            contentDescription = "Cerrar Sesión",
+                            tint = MaterialTheme.colorScheme.error
+                        )
                     }
                 }
             )

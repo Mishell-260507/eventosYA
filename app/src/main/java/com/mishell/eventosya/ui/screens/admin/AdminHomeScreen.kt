@@ -7,14 +7,17 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Logout
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.google.firebase.auth.FirebaseAuth
 import com.mishell.eventosya.data.model.Event
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AdminHomeScreen(
     viewModel: AdminHomeViewModel,
@@ -23,6 +26,20 @@ fun AdminHomeScreen(
     val state = viewModel.uiState
 
     Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text("Eventos") },
+                actions = {
+                    IconButton(onClick = { FirebaseAuth.getInstance().signOut() }) {
+                        Icon(
+                            imageVector = Icons.Default.Logout,
+                            contentDescription = "Cerrar Sesión",
+                            tint = MaterialTheme.colorScheme.error
+                        )
+                    }
+                }
+            )
+        },
         floatingActionButton = {
             FloatingActionButton(onClick = onCreateEvent) {
                 Icon(Icons.Default.Add, contentDescription = "Crear Evento")
